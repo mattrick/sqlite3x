@@ -12,13 +12,13 @@
 #include "tuple_call.hpp"
 
 template <typename Signature>
-struct Caller;
+struct RowReader;
 
 template <typename R, typename... Args>
-struct Caller<R (Args...)>
+struct RowReader<R (Args...)>
 {
 	template <typename Callback>
-	static void call(Callback callback)
+	static void Read(Callback callback)
 	{
 		std::tuple<Args...> tuple;
 
@@ -29,14 +29,14 @@ struct Caller<R (Args...)>
 };
 
 template <typename R, typename... Args>
-struct Caller<R (*)(Args...)>
+struct RowReader<R (*)(Args...)>
 {
 	template <typename Callback>
-	static void call(Callback callback)
+	static void Read(Callback callback)
 	{
-		std::tuple<Args...> tuple(1,2,3);
+		std::tuple<Args...> tuple;
 
-		std::cout << tuple_call::Call_ret<R>(callback, tuple);
+		tuple_call::Call(callback, tuple);
 	}
 };
 
@@ -83,15 +83,7 @@ class Query
 		{
 			typedef Object Type;
 
-			int result = 0;
-
-			while ((result = sqlite3_step(m_SQL)) == SQLITE_ROW)
-			{
-				Caller<Type>::call(o);
-			}
-
-			if (result != SQLITE_DONE)
-				throw "error";
+			_Execute<Type, Object>(o);
 		}
 
 		template <typename Object>
@@ -100,11 +92,17 @@ class Query
 		{
 			typedef typename remove_method_pointer<decltype(&Object::operator())>::type Type;
 
+			_Execute<Type, Object>(o);
+		}
+
+		template <typename Type, typename Object>
+		void _Execute(Object& o)
+		{
 			int result = 0;
 
 			while ((result = sqlite3_step(m_SQL)) == SQLITE_ROW)
 			{
-				Caller<Type>::call(o);
+				RowReader<Type>::Read(o);
 			}
 
 			if (result != SQLITE_DONE)
