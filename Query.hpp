@@ -5,40 +5,7 @@
 
 #include "Cell.hpp"
 
-#include "remove_method_pointer.hpp"
-#include "is_function.hpp"
-#include "is_functional.hpp"
-
-#include "tuple_call.hpp"
-
-template <typename Signature>
-struct RowReader;
-
-template <typename R, typename... Args>
-struct RowReader<R (Args...)>
-{
-	template <typename Callback>
-	static void Read(Callback callback)
-	{
-		std::tuple<Args...> tuple;
-
-		//_fill_tuple<sizeof...(Args), sizeof...(Args)>::fill(tuple);
-
-		tuple_call::Call(callback, tuple);
-	}
-};
-
-template <typename R, typename... Args>
-struct RowReader<R (*)(Args...)>
-{
-	template <typename Callback>
-	static void Read(Callback callback)
-	{
-		std::tuple<Args...> tuple;
-
-		tuple_call::Call(callback, tuple);
-	}
-};
+#include "RowReader.hpp"
 
 class Query
 {
