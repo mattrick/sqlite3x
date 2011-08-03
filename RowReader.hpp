@@ -8,14 +8,14 @@
 
 #include "tuple_call.hpp"
 
-template <unsigned int N, typename... Args>
+/*template <unsigned int N, typename... Args>
 struct fill_tuple
 {
 	template <typename Head, typename... Rest>
 	static void _fill(unsigned int size, std::tuple<Args...>& tuple)
 	{
 		std::cout << size - N << std::endl;
-		fill_tuple<N-1, Rest...>::_fill(size, tuple);
+		//fill_tuple<N-1, Rest...>::_fill<Rest...>(size, tuple);
 	}
 };
 
@@ -27,7 +27,33 @@ struct fill_tuple<1, Args...>
 	{
 		std::cout << size << std::endl;
 	}
+};*/
+
+template <unsigned int N, typename... Args>
+struct fill_tuple;
+
+template <unsigned int N, typename Head, typename... Rest>
+struct fill_tuple<N, Head, Rest...>
+{
+	template <typename... Tuple>
+	static void _fill(unsigned int size, std::tuple<Tuple...>& tuple)
+	{
+		std::cout << size - N << std::endl;
+		fill_tuple<N-1, Rest...>::_fill(size, tuple);
+	}
 };
+
+template <typename Head, typename... Rest>
+struct fill_tuple<1, Head, Rest...>
+{
+	template <typename... Tuple>
+	static void _fill(unsigned int size, std::tuple<Tuple...>& tuple)
+	{
+		std::cout << size << std::endl;
+	}
+};
+
+
 
 template <typename R, typename... Args>
 struct _RowReader
@@ -37,9 +63,7 @@ struct _RowReader
 	{
 		std::tuple<Args...> tuple;
 
-		fill_tuple<sizeof...(Args), Args...> s;
-
-		s._fill<Args...>(2, tuple);
+		fill_tuple<sizeof...(Args), Args...>::_fill(sizeof...(Args), tuple);
 
 		tuple_call::Call(callback, tuple);
 	}
