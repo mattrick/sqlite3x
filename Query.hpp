@@ -5,7 +5,9 @@
 
 #include "Cell.hpp"
 
-#include "RowReader.hpp"
+#include "RowExecuter.hpp"
+
+class Result;
 
 class Query
 {
@@ -61,6 +63,11 @@ class Query
 
 			_Execute<Type, Object>(o);
 		}
+			
+		void Execute()
+		{
+			Execute([](){});
+		}
 
 		template <typename Type, typename Object>
 		void _Execute(Object& o)
@@ -69,15 +76,43 @@ class Query
 
 			while ((result = sqlite3_step(m_SQL)) == SQLITE_ROW)
 			{
-				RowReader<Type>::Read(m_SQL, o);
+				RowExecuter<Type>::Read(m_SQL, o);
 			}
 
 			if (result != SQLITE_DONE)
 				throw "error";
 		}
 
+		/*Result* _Result()
+		{
+			int result = 0;
+
+			while ((result = sqlite3_step(m_SQL)) == SQLITE_ROW)
+			{
+				//RowReader::Read(m_SQL);
+			}
+
+			if (result != SQLITE_DONE)
+				throw "error";
+		}*/
+
 		~Query()
 		{
 			sqlite3_finalize(m_SQL);
 		}
 };
+
+/*
+TODO:
+Result():
+
+easily for-eachable and accessible both by col and name, i. e.:
+
+for each (auto row in sql->Result())
+//or g++
+//for (auto row: sql->Result())
+{
+	row->Get<std::string>(0);
+	row->Get<int>("ID");
+}
+*/
