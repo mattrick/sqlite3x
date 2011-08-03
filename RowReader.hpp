@@ -24,13 +24,13 @@ struct fill_tuple<N, Size, Head, Rest...>
 	}
 };
 
-template <unsigned int Size, typename Head, typename... Rest>
-struct fill_tuple<1, Size, Head, Rest...>
+template <unsigned int Size>
+struct fill_tuple<0, Size>
 {
 	template <typename... Tuple>
 	static void _fill(sqlite3_stmt* sql, std::tuple<Tuple...>& tuple)
 	{
-		std::get<Size - 1>(tuple) = Cell::_read<Head>(sql, Size - 1);
+
 	}
 };
 
@@ -45,16 +45,6 @@ struct _RowReader
 		fill_tuple<sizeof...(Args), sizeof...(Args), Args...>::_fill(sql, tuple);
 
 		tuple_call::Call(callback, tuple);
-	}
-};
-
-template <typename R>
-struct _RowReader<R>
-{
-	template <typename Callback>
-	static void Read(Callback callback)
-	{
-		tuple_call::Call(callback, std::tuple<>());
 	}
 };
 
