@@ -8,6 +8,8 @@
 
 #include <sqlite3.h>
 
+#include "is_string.hpp"
+
 class Cell
 {
 	private:
@@ -15,21 +17,21 @@ class Cell
 	protected:
 
 	public:
-		template<typename Integral>
+		template <typename Integral>
 		static typename std::enable_if<std::is_integral<Integral>::value>::type
 			_bind(sqlite3_stmt* sql, int col, Integral value)
 		{
 			sqlite3_bind_int(sql, col, value);
 		}
 		
-		template<typename FloatingPoint>
+		template <typename FloatingPoint>
 		static typename std::enable_if<std::is_floating_point<FloatingPoint>::value>::type
 			_bind(sqlite3_stmt* sql, int col, FloatingPoint value)
 		{
 			sqlite3_bind_double(sql, col, value);
 		};
 
-		template<typename Blob>
+		template <typename Blob>
 		static typename std::enable_if<std::is_same<Blob, void*>::value>::type
 			_bind(sqlite3_stmt* sql, int col, Blob value, int size)
 		{
@@ -37,6 +39,7 @@ class Cell
 			memcpy(memory, value, size);
 			sqlite3_bind_blob(sql, col, memory, size, free);
 		}
+
 
 		static void _bind(sqlite3_stmt* sql, int col, std::string value)
 		{
@@ -73,7 +76,9 @@ class Cell
 				return sqlite3_column_double(sql, col);
 		};
 
-		static std::string _read(sqlite3_stmt* sql, int col, std::string* value = nullptr)
+		template <typename String>
+		static typename std::enable_if<is_string<String>::value, String>::type
+			_read(sqlite3_stmt* sql, int col, String* value = nullptr)
 		{
 			if (value != nullptr)
 			{
@@ -83,6 +88,17 @@ class Cell
 			else
 				return (const char*)sqlite3_column_text(sql, col);
 		}
+
+		/*static std::string _read(sqlite3_stmt* sql, int col, std::string* value = nullptr)
+		{
+			if (value != nullptr)
+			{
+				*value = (const char*)sqlite3_column_text(sql, col);
+				return *value;
+			}
+			else
+				return (const char*)sqlite3_column_text(sql, col);
+		}*/
 };
 
 template<typename Integral>

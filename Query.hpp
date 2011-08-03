@@ -69,7 +69,7 @@ class Query
 
 			while ((result = sqlite3_step(m_SQL)) == SQLITE_ROW)
 			{
-				RowReader<Type>::Read(o);
+				RowReader<Type>::Read(m_SQL, o);
 			}
 
 			if (result != SQLITE_DONE)
