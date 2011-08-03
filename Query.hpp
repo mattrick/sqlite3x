@@ -25,7 +25,7 @@ class Query
 		}
 
 		template <typename... Args>
-		Query* bind(Args... args)
+		Query* Bind(Args... args)
 		{
 			return _bind<sizeof...(args) - 1>(sizeof...(args), args...);
 		}
@@ -78,6 +78,6 @@ class Query
 
 		~Query()
 		{
-			//sqlite3_finalize(m_SQL);
+			sqlite3_finalize(m_SQL);
 		}
 };
