@@ -29,15 +29,4 @@ DB::~DB()
 	sqlite3_close(m_DB);
 }
 
-void DB::Exec(std::string query)
-{
-	char* error = nullptr;
-
-	if (sqlite3_exec(m_DB, query.c_str(), nullptr, 0, &error) != SQLITE_OK)
-	{
-		fprintf(stderr, "SQL error: %s\n", error);
-		sqlite3_free(error);
-	}
-}
-
 }

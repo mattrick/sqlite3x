@@ -1,0 +1,26 @@
+version 0.1	(2001-08-12)
+============================
+WORKS ONLY WITH GCC 4.6+ (due to required support for new
+c++0x standard and variadic templates).
+
+Features:
+- object oriented interface
+- taking advantage of c++0x standard (lambdas, variadic
+templates)
+- executing simple queries (i.e. queries which do not
+return any result /* if they do, it's omitted */) using printf-
+like syntax, what allows to use c++ variables in queries
+- Query class what allows to use sql built-in question mark
+and bind variables support
+- in addition to that, as a parameter of Execute() you can
+pass either function, functor (object with operator() defined)
+or lambda expression with arguments matching result of query
+(works with arguments count equal to or less than returned columns)
+which will be called after each row of result
+
+TODO:
+- return result of a query as array of objects (probably Row,
+which would be used to retrieve column names and their values
+for each row /* unfortunatelly there's no way to use php-like
+associative arrays of whatever type nor row object with members
+named after table columns */)

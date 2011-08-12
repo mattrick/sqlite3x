@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Cell.hpp"
+#include "sqlite3x/Cell.hpp"
 
 namespace SQLite3x
 {

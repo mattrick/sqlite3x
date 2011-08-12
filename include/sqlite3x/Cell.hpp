@@ -6,9 +6,9 @@
 #include <cstdlib>
 #include <memory.h>
 
-#include <sqlite3.h>
+#include "../../sqlite3/sqlite3.h"
 
-#include "is_string.hpp"
+#include "../is_string.hpp"
 
 using SQLite3x::type_traits::is_string;
 

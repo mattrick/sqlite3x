@@ -1,23 +1,35 @@
-CXX = g++
-CXXFLAGS = -std=c++0x -Isqlite3
-LDFLAGS = -Lsqlite3 -lsqlite3
+CXX=g++
+CXXFLAGS=-std=c++0x -Isqlite3 -Iinclude -Iinclude/sqlite3x
+LDFLAGS=
 
-OBJS=main.o DB.o Query.o Cell.o
-LIBS=sqlite3/sqlite3.a
-BIN=sqlite3x.exe
+OUTDIR=lib
+OBJDIR=obj
+SRCDIR=src
 
-bin\$(BIN): $(OBJS) $(LIBS)
-	@echo "LD\t$@"
-	@$(CXX) $(OBJS) $(LDFLAGS) -o $@
+OBJS_LIST=DB.o Query.o Cell.o sqlite3.o
+OBJS=$(addprefix $(OBJDIR)/, $(OBJS_LIST))
+OUT=$(OUTDIR)/libsqlite3x.a
 
-%.o: %.cpp
-	@echo "CC\t$<"
+$(OUT): $(OBJS)
+	@mkdir -p $(OUTDIR)
+	@echo "AR    $@"
+	@ar cr $(OUT) $(OBJS)
+	@make -C examples
+
+$(OBJS): | $(OBJDIR)
+
+$(OBJDIR):
+	@mkdir -p $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@echo "CC    $<"
 	@$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-sqlite3/sqlite3.a:
-	make -C sqlite3
+$(OBJDIR)/sqlite3.o:
+	@make sqlite3.o -C sqlite3
 
-clean:
-	rm bin/* -f
-	rm *.o
-	make -C sqlite3 clean
+.PHONY clean:
+	@rm $(OBJS)
+	@rm $(OUT)
+	@make -C sqlite3 clean
+	@make -C examples clean
