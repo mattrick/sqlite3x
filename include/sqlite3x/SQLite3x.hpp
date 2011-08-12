@@ -10,7 +10,7 @@ namespace SQLite3x
 
 struct Info
 {
-	static constexpr const char* Version = "0.1 beta";
+	static constexpr const char* Version = "0.1";
 };
 
 }
