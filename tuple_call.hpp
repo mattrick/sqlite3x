@@ -1,7 +1,12 @@
 #include <tuple>
 
-namespace tuple_call
+namespace SQLite3x
 {
+	namespace utilities
+	{
+		namespace tuple_call
+		{
+
 	template <typename Ret, unsigned int N>
 	struct _tuplecall_ret
 	{
@@ -93,5 +98,8 @@ namespace tuple_call
 	void CallBackwards_ret(Object object, std::tuple<TupleArgs...> tuple)
 	{
 		tuple_call::_tuplecall<sizeof...(TupleArgs)>::_callbackwards(object, tuple);
+	}
+
+		}
 	}
 }

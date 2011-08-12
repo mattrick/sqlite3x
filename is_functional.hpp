@@ -1,7 +1,9 @@
 #pragma once
 
-#ifndef __IS_FUNCTIONAL__
-#define __IS_FUNCTIONAL__
+namespace SQLite3x
+{
+	namespace type_traits
+	{
 
 template <typename T>
 struct is_functional
@@ -18,4 +20,5 @@ struct is_functional
 	static const bool value = sizeof(test<T>(0)) == sizeof(yes);
 };
 
-#endif
+	}
+}

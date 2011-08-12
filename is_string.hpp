@@ -1,5 +1,10 @@
 #pragma once
 
+namespace SQLite3x
+{
+	namespace type_traits
+	{
+
 template <typename T>
 struct is_string
 {
@@ -11,3 +16,6 @@ struct is_string<std::basic_string<charT, traits, Alloc> >
 {
     enum { value = true };
 };
+
+	}
+}
