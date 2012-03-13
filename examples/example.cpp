@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <sqlite3x/sqlite3x.hpp>
+#include <sqlite3x/SQLite3x.hpp>
 
 struct Functor
 {
