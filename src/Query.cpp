@@ -1,6 +1,6 @@
 #include <sqlite3.h>
 
-#include "Query.hpp"
+#include "sqlite3x/Query.hpp"
 
 namespace SQLite3x
 {

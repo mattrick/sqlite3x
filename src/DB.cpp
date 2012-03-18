@@ -1,7 +1,7 @@
 #include <sqlite3.h>
 
-#include "DB.hpp"
-#include "Query.hpp"
+#include "sqlite3x/DB.hpp"
+#include "sqlite3x/Query.hpp"
 
 namespace SQLite3x
 {
