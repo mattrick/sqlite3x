@@ -34,16 +34,18 @@ class DB
 template <typename... Args>
 void DB::Exec(const char* fmt, Args... args)
 {
-	char* error = nullptr;
+	char* errorbuf = nullptr;
 
 	char buffer[1024];
 
 	sprintf(buffer, fmt, args...);
 
-	if (sqlite3_exec(m_DB, buffer, nullptr, 0, &error) != SQLITE_OK)
+	if (sqlite3_exec(m_DB, buffer, nullptr, 0, &errorbuf) != SQLITE_OK)
 	{
-		fprintf(stderr, "SQL error: %s\n", error);
-		sqlite3_free(error);
+		std::string error(errorbuf);
+		sqlite3_free(errorbuf);
+
+		throw error;
 	}
 }
 

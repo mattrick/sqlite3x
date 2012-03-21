@@ -76,7 +76,7 @@ void Query::_execute(Object& o)
 	}
 
 	if (result != SQLITE_DONE)
-		throw "error";
+		throw std::string(sqlite3_errmsg(m_DB));
 }
 
 template <typename... Args>
