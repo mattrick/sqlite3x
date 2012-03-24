@@ -1,4 +1,4 @@
-version 0.1	(2001-08-12)
+version 0.1	(2011-08-12)
 ============================
 WORKS ONLY WITH GCC 4.6+ (due to required support for new
 c++0x standard and variadic templates).
