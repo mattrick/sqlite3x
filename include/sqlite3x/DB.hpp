@@ -17,12 +17,15 @@ class DB
 
 	protected:
 		sqlite3* m_DB;
+		std::string m_Filename;
 
 	public:
 		DB(std::string filename);
 		DB();
 
 		~DB();
+
+		std::string GetFileName();
 
 		template <typename... Args>
 		void Exec(const char* fmt, Args... args);

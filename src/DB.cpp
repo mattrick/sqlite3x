@@ -7,6 +7,7 @@ namespace SQLite3x
 {
 
 DB::DB(std::string filename)
+	: m_Filename(filename)
 {
 	if (sqlite3_open(filename.c_str(), &m_DB))
 	{
@@ -25,6 +26,11 @@ DB::DB()
 DB::~DB()
 {
 	sqlite3_close(m_DB);
+}
+
+std::string DB::GetFileName()
+{
+	return m_Filename;
 }
 
 }
