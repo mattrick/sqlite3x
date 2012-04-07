@@ -8,9 +8,13 @@
 
 #include <sqlite3.h>
 
+#include "is_int64.hpp"
 #include "is_string.hpp"
+#include "is_boolean.hpp"
 
 using SQLite3x::type_traits::is_string;
+using SQLite3x::type_traits::is_int64;
+using SQLite3x::type_traits::is_boolean;
 
 namespace SQLite3x
 {
@@ -66,7 +70,10 @@ template <typename Integral>
 typename std::enable_if<std::is_integral<Integral>::value>::type
 	Cell::_bind(sqlite3_stmt* sql, int col, Integral value)
 {
-	sqlite3_bind_int(sql, col, value);
+	if (is_int64<Integral>::value)
+		sqlite3_bind_int64(sql, col, value);
+	else
+		sqlite3_bind_int(sql, col, value);
 }
 		
 template <typename FloatingPoint>
@@ -89,7 +96,10 @@ template <typename Integral>
 typename std::enable_if<std::is_integral<Integral>::value, Integral>::type
 	Cell::_read(sqlite3_stmt* sql, int col)
 {
-	return sqlite3_column_int(sql, col);
+	if (is_int64<Integral>::value)
+		return sqlite3_column_int64(sql, col);
+	else
+		return sqlite3_column_int(sql, col);
 }
 
 template<typename FloatingPoint>
